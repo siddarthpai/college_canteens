@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:502537194817:android:6eee1b329ba345780525c0",
+        "mobilesdk_app_id": "1:502537194817:android:77d8eb90af36151c0525c0",
         "android_client_info": {
-          "package_name": "com.university.canteens"
+          "package_name": "com.university.canteens.college_canteens"
         }
       },
       "oauth_client": [
