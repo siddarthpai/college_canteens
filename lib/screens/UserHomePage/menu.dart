@@ -2,8 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
+import 'package:uuid/uuid.dart';
+
 class Menu extends StatefulWidget {
-  const Menu({Key? key}) : super(key: key);
+  const Menu({Key? key, required this.usrdata, required this.updateWallet}) : super(key: key);
+  final Map usrdata;
+  final Function updateWallet;
 
   @override
   _MenuState createState() => _MenuState();
@@ -14,6 +18,7 @@ class _MenuState extends State<Menu> {
   FirebaseFirestore.instance.doc('Colleges/PES - RR/Canteens/13th Floor Canteen').snapshots();
   List counts = List.generate(100, (index) => 0);
   int subtotal = 0;
+  Map cart = {};
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +72,12 @@ class _MenuState extends State<Menu> {
                                         onPressed: () {
                                           setState(() {
                                             counts[index]++;
-                                            subtotal += counts[index] * menu[key]['Price'] as int;
+                                            subtotal += menu[key]['Price'] as int;
+                                            cart[key] = {
+                                              "quantity" : counts[index],
+                                              "price": menu[key]['Price'] as int,
+                                              "total_price" : counts[index] * menu[key]['Price'] as int
+                                          };
                                           });
                                         },
                                     ),
@@ -79,7 +89,19 @@ class _MenuState extends State<Menu> {
                                           if (counts[index] != 0){
                                             setState(() {
                                               counts[index]--;
-                                              subtotal -= counts[index] * menu[key]['Price'] as int;
+                                              subtotal -= menu[key]['Price'] as int;
+                                              if (counts[index]==0 && cart[key]!=null)
+                                                {
+                                                  cart.remove(key);
+                                                }
+                                              else if (cart[key]!=null)
+                                                {
+                                                  cart[key] = {
+                                                    "quantity" : counts[index],
+                                                    "price": menu[key]['Price'] as int,
+                                                    "total_price" : counts[index] * menu[key]['Price'] as int
+                                                  };
+                                                }
                                             });
                                           }
                                         },
@@ -112,7 +134,53 @@ class _MenuState extends State<Menu> {
                         Row(
                           children: [
                             OutlinedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                String username = widget.usrdata['username'];
+                                var event = await FirebaseFirestore.instance.doc('Users/User').get();
+                                Map<String, dynamic> users = event.data() as Map<String, dynamic>;
+                                int balance = users[username]['Balance'];
+
+                                if (balance < subtotal){
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text("Alert"),
+                                          content: Text("Insuffient balance. Please Recharge Wallet"),
+                                          actions: [
+                                            TextButton(
+                                              child: Text("OK"),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      }
+                                  );
+                                }
+                                else {
+                                  int newBalance = balance - subtotal;
+                                  var _event = await FirebaseFirestore.instance.doc('Users/User');
+                                  await _event.update({widget.usrdata['username']: {'Balance': newBalance, "isAdmin": false, "password": widget.usrdata['password']}});
+                                  widget.usrdata['Balance'] = newBalance;
+
+
+                                  var collection = await FirebaseFirestore.instance.collection('Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
+                                  var uuid = Uuid();
+                                  collection.doc(uuid.v4().toString())
+                                  .set({
+                                    "user": username,
+                                    "price": subtotal,
+                                    "items": cart
+                                  }
+                                  );
+
+                                  setState(() {
+                                    subtotal=0;
+                                  });
+                                }
+                              },
                               child: Text("Pay"),
                             ),
                             SizedBox(width: 20,)
