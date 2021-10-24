@@ -36,7 +36,7 @@ class _SignInState extends State<SignIn> {
           )
         ],
       ),
-      body: Container(
+      body: loading ? Center(child: Text("Loading")) : Container(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
           child: Form(
             key: _formKey,
@@ -99,9 +99,15 @@ class _SignInState extends State<SignIn> {
                         else{
                           print("Result");
                           print(result['isAdmin'].runtimeType);
+                          setState(() {
+                            loading = false;
+                          });
                           if (result['isAdmin'] == false){
                             Navigator.pushNamed(context, '/user', arguments: {'usrdata': result});
                             //Navigator.pop();
+                          }
+                          else if (result['isAdmin'] == true){
+                            Navigator.pushNamed(context, '/admin');
                           }
                         }
                       }

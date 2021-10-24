@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
-
 import 'package:uuid/uuid.dart';
 
 class Menu extends StatefulWidget {
@@ -168,7 +167,8 @@ class _MenuState extends State<Menu> {
 
                                   var collection = await FirebaseFirestore.instance.collection('Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
                                   var uuid = Uuid();
-                                  collection.doc(uuid.v4().toString())
+                                  var ord_id = uuid.v4().toString();
+                                  collection.doc(ord_id)
                                   .set({
                                     "user": username,
                                     "price": subtotal,
@@ -179,6 +179,36 @@ class _MenuState extends State<Menu> {
                                   setState(() {
                                     subtotal=0;
                                   });
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        List<Widget> wlist =[];
+                                        cart.keys.toList().forEach((key) {
+                                          wlist.add( Text("${key} - ${cart[key]['quantity'].toString()}"));
+                                        });
+                                        return AlertDialog(
+                                          title: Text("Order Confirmed!"),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Order Id: ${ord_id}\n"),
+                                              Text("Order:"),
+                                              ...wlist
+                                            ],
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              child: Text("OK"),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      }
+                                  );
+
                                 }
                               },
                               child: Text("Pay"),

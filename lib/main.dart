@@ -1,3 +1,4 @@
+import 'package:college_canteens/screens/AdminHomePage.dart';
 import 'package:college_canteens/screens/authenticate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/auth',
       routes: {
         '/auth': (context) => Authenticate(),
-        '/user': (context) => UserHomePage()
+        '/user': (context) => UserHomePage(),
+        '/admin': (context) => AdminHomePage()
       },
     );
   }
