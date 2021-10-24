@@ -1,7 +1,8 @@
+import 'package:college_canteens/screens/authenticate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'screens/UserHomePage.dart';
-import 'screens/login.dart';
+import 'screens/signin.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +20,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      initialRoute: '/user',
+      initialRoute: '/auth',
       routes: {
-        '/login': (context) => Login(),
+        '/auth': (context) => Authenticate(),
         '/user': (context) => UserHomePage()
       },
     );
