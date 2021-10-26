@@ -20,7 +20,20 @@ class _UserHomePageState extends State<UserHomePage> {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
     usrdata = arguments['usrdata'];
     return Scaffold(
-      appBar: AppBar(title: Text("College Canteens")),
+      appBar: AppBar(
+        title: Text("College Canteens"),
+        actions: [
+          TextButton(
+            child: Text(
+              "Sign Out",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.popAndPushNamed(context, '/auth');
+            },
+          )
+        ],
+      ),
       body: Stack(
         children: [
           Offstage(
