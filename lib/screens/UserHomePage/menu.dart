@@ -4,7 +4,8 @@ import 'dart:core';
 import 'package:uuid/uuid.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({Key? key, required this.usrdata, required this.updateWallet}) : super(key: key);
+  const Menu({Key? key, required this.usrdata, required this.updateWallet})
+      : super(key: key);
   final Map usrdata;
   final Function updateWallet;
 
@@ -14,10 +15,11 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   final Stream<DocumentSnapshot<Map<String, dynamic>>> menuItems =
-  FirebaseFirestore.instance.doc('Colleges/PES - RR/Canteens/13th Floor Canteen').snapshots();
-  List counts = List.generate(100, (index) => 0);
-  int subtotal = 0;
+      FirebaseFirestore.instance
+          .doc('Colleges/PES - RR/Canteens/13th Floor Canteen')
+          .snapshots();
   Map cart = {};
+  int subtotal = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,70 +50,92 @@ class _MenuState extends State<Menu> {
                       height: 60,
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: Card(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(width: 20,),
-                                Text("${key.toString()} x${counts[index]}"),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Rs ${menu[key]['Price'].toString()}"),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                        icon: Icon(Icons.add),
-                                        iconSize: 20,
-                                        color: Colors.orange,
-                                        onPressed: () {
-                                          setState(() {
-                                            counts[index]++;
-                                            subtotal += menu[key]['Price'] as int;
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text("${key.toString()} x" +
+                                  (cart[key] == null
+                                          ? 0
+                                          : cart[key]['quantity'])
+                                      .toString()),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Rs ${menu[key]['Price'].toString()}"),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      icon: Icon(Icons.add),
+                                      iconSize: 20,
+                                      color: Colors.orange,
+                                      onPressed: () {
+                                        setState(() {
+                                          if (cart[key] == null) {
                                             cart[key] = {
-                                              "quantity" : counts[index],
-                                              "price": menu[key]['Price'] as int,
-                                              "total_price" : counts[index] * menu[key]['Price'] as int
-                                          };
-                                          });
-                                        },
-                                    ),
-                                    IconButton(
-                                        icon: Icon(Icons.remove),
-                                        iconSize: 20,
-                                        color: Colors.orange,
-                                        onPressed: () {
-                                          if (counts[index] != 0){
-                                            setState(() {
-                                              counts[index]--;
-                                              subtotal -= menu[key]['Price'] as int;
-                                              if (counts[index]==0 && cart[key]!=null)
-                                                {
-                                                  cart.remove(key);
-                                                }
-                                              else if (cart[key]!=null)
-                                                {
-                                                  cart[key] = {
-                                                    "quantity" : counts[index],
-                                                    "price": menu[key]['Price'] as int,
-                                                    "total_price" : counts[index] * menu[key]['Price'] as int
-                                                  };
-                                                }
-                                            });
+                                              "quantity": 1,
+                                              "price":
+                                                  menu[key]['Price'] as int,
+                                              "total_price":
+                                                  menu[key]['Price'] as int
+                                            };
+                                          } else {
+                                            cart[key] = {
+                                              "quantity":
+                                                  cart[key]["quantity"] + 1,
+                                              "price":
+                                                  menu[key]['Price'] as int,
+                                              "total_price":
+                                                  (cart[key]["quantity"] + 1) *
+                                                      menu[key]['Price'] as int
+                                            };
                                           }
-                                        },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          ],
-                        )
-                      ),
+                                          subtotal += menu[key]["Price"] as int;
+                                        });
+                                      }),
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    iconSize: 20,
+                                    color: Colors.orange,
+                                    onPressed: () {
+                                      if (cart[key] == null) {
+                                        return;
+                                      }
+                                      if (cart[key]['quantity'] == 0) {
+                                        return;
+                                      }
+                                      if (cart[key]['quantity'] == 1) {
+                                        setState(() {
+                                          cart.remove(key);
+                                          subtotal -= menu[key]['Price'] as int;
+                                        });
+                                        return;
+                                      }
+                                      setState(() {
+                                        cart[key] = {
+                                          "quantity": cart[key]["quantity"] - 1,
+                                          "price": menu[key]['Price'] as int,
+                                          "total_price":
+                                              (cart[key]["quantity"] + 1) *
+                                                  menu[key]['Price'] as int
+                                        };
+                                        subtotal -= menu[key]['Price'] as int;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      )),
                     );
                   },
                 ),
@@ -120,106 +144,119 @@ class _MenuState extends State<Menu> {
                 child: Container(
                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: Card(
-                    color: Colors.lime[300],
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(width: 20,),
-                            Text("Subtotal: Rs ${subtotal}"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            OutlinedButton(
-                              onPressed: () async {
-                                String username = widget.usrdata['username'];
-                                var event = await FirebaseFirestore.instance.doc('Users/User').get();
-                                Map<String, dynamic> users = event.data() as Map<String, dynamic>;
-                                int balance = users[username]['Balance'];
+                      color: Colors.lime[300],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text("Subtotal: Rs ${subtotal}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              OutlinedButton(
+                                child: Text("Pay"),
+                                onPressed: () async {
+                                  String username = widget.usrdata['username'];
+                                  var event = await FirebaseFirestore.instance
+                                      .doc('Users/User')
+                                      .get();
+                                  Map<String, dynamic> users =
+                                      event.data() as Map<String, dynamic>;
+                                  int balance = users[username]['Balance'];
 
-                                if (balance < subtotal){
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text("Alert"),
-                                          content: Text("Insuffient balance. Please Recharge Wallet"),
-                                          actions: [
-                                            TextButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      }
-                                  );
-                                }
-                                else {
-                                  int newBalance = balance - subtotal;
-                                  var _event = await FirebaseFirestore.instance.doc('Users/User');
-                                  await _event.update({widget.usrdata['username']: {'Balance': newBalance, "isAdmin": false, "password": widget.usrdata['password']}});
-                                  widget.usrdata['Balance'] = newBalance;
-
-
-                                  var collection = await FirebaseFirestore.instance.collection('Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
-                                  var uuid = Uuid();
-                                  var ord_id = uuid.v4().toString();
-                                  collection.doc(ord_id)
-                                  .set({
-                                    "user": username,
-                                    "price": subtotal,
-                                    "items": cart
-                                  }
-                                  );
-
-                                  setState(() {
-                                    subtotal=0;
-                                  });
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        List<Widget> wlist =[];
-                                        cart.keys.toList().forEach((key) {
-                                          wlist.add( Text("${key} - ${cart[key]['quantity'].toString()}"));
-                                        });
-                                        return AlertDialog(
-                                          title: Text("Order Confirmed!"),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Order Id: ${ord_id}\n"),
-                                              Text("Order:"),
-                                              ...wlist
+                                  if (balance < subtotal) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text("Alert"),
+                                            content: Text(
+                                                "Insuffient balance. Please Recharge Wallet"),
+                                            actions: [
+                                              TextButton(
+                                                child: Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              )
                                             ],
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
+                                          );
+                                        });
+                                  } else {
+                                    int newBalance = balance - subtotal;
+                                    var _event = await FirebaseFirestore
+                                        .instance
+                                        .doc('Users/User');
+                                    await _event.update({
+                                      widget.usrdata['username']: {
+                                        'Balance': newBalance,
+                                        "isAdmin": false,
+                                        "password": widget.usrdata['password']
                                       }
-                                  );
+                                    });
+                                    widget.usrdata['Balance'] = newBalance;
 
-                                }
-                              },
-                              child: Text("Pay"),
-                            ),
-                            SizedBox(width: 20,)
-                          ],
-                        )
+                                    var collection = await FirebaseFirestore
+                                        .instance
+                                        .collection(
+                                            'Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
+                                    var uuid = Uuid();
+                                    var ord_id = uuid.v4().toString();
+                                    collection.doc(ord_id).set({
+                                      "user": username,
+                                      "price": subtotal,
+                                      "items": cart
+                                    });
 
-                      ],
-                    )
-                  ),
+                                    setState(() {
+                                      subtotal = 0;
+                                      cart = {};
+                                    });
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          List<Widget> wlist = [];
+                                          cart.keys.toList().forEach((key) {
+                                            wlist.add(Text(
+                                                "${key} - ${cart[key]['quantity'].toString()}"));
+                                          });
+                                          return AlertDialog(
+                                            title: Text("Order Confirmed!"),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Order Id: ${ord_id}\n"),
+                                                Text("Order:"),
+                                                ...wlist
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                child: Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                width: 20,
+                              )
+                            ],
+                          )
+                        ],
+                      )),
                 ),
               )
             ],
