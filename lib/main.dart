@@ -1,4 +1,4 @@
-import 'package:college_canteens/screens/AdminHomePage.dart';
+import 'package:college_canteens/screens/admin_homepage.dart';
 import 'package:college_canteens/screens/authenticate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,4 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
