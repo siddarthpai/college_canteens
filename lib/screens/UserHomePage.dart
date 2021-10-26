@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'UserHomePage/menu.dart';
 import 'UserHomePage/wallet.dart';
 
-class UserHomePage extends StatefulWidget{
+class UserHomePage extends StatefulWidget {
   const UserHomePage({Key? key}) : super(key: key);
 
   @override
@@ -12,33 +12,28 @@ class UserHomePage extends StatefulWidget{
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  int currIndex=0;
+  int currIndex = 0;
   Map usrdata = {};
-
-  void updateWallet() async {
-    var event = await FirebaseFirestore.instance.doc('Users/User').get(usrdata['username']);
-    setState(() {
-      usrdata = event.data() as Map<String, dynamic>;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
     usrdata = arguments['usrdata'];
     return Scaffold(
-    appBar: AppBar(
-      title: Text("College Canteens")
-    ),
+      appBar: AppBar(title: Text("College Canteens")),
       body: Stack(
         children: [
           Offstage(
             offstage: currIndex != 0,
-            child: Menu(usrdata: usrdata, updateWallet: updateWallet,),
+            child: Menu(
+              usrdata: usrdata,
+            ),
           ),
           Offstage(
             offstage: currIndex != 1,
-            child: Wallet(username: usrdata['username'],),
+            child: Wallet(
+              username: usrdata['username'],
+            ),
           )
         ],
       ),

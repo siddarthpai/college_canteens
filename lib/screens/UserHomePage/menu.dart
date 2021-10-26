@@ -4,10 +4,8 @@ import 'dart:core';
 import 'package:uuid/uuid.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({Key? key, required this.usrdata, required this.updateWallet})
-      : super(key: key);
+  const Menu({Key? key, required this.usrdata}) : super(key: key);
   final Map usrdata;
-  final Function updateWallet;
 
   @override
   _MenuState createState() => _MenuState();
