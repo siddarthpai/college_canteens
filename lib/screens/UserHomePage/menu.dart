@@ -213,11 +213,7 @@ class _MenuState extends State<Menu> {
                                       "items": cart
                                     });
 
-                                    setState(() {
-                                      subtotal = 0;
-                                      cart = {};
-                                    });
-                                    showDialog(
+                                    await showDialog(
                                         context: context,
                                         builder: (context) {
                                           List<Widget> wlist = [];
@@ -247,6 +243,10 @@ class _MenuState extends State<Menu> {
                                             ],
                                           );
                                         });
+                                    setState(() {
+                                      subtotal = 0;
+                                      cart = {};
+                                    });
                                   }
                                 },
                               ),
