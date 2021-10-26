@@ -11,7 +11,7 @@ class Wallet extends StatefulWidget {
 
 class _WalletState extends State<Wallet> {
   final Stream<DocumentSnapshot<Map<String, dynamic>>> menuItems =
-  FirebaseFirestore.instance.doc('Users/User').snapshots();
+      FirebaseFirestore.instance.doc('Users/User').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -27,32 +27,33 @@ class _WalletState extends State<Wallet> {
           final data = snapshot.requireData.get(widget.username);
           Map<String, dynamic> usrdata = Map<String, dynamic>.from(data);
 
-          return
-            Container(
-              alignment: Alignment.topCenter,
-              padding: EdgeInsets.all(20),
-
-              child: Card(
-                color: Colors.blue,
-                child: Container(
-                    height: 200,
-                    width: double.infinity,
-                    child: Center(child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Wallet",
-                          style: TextStyle(color: Colors.black54, fontSize: 20),
-                        ),
-                        SizedBox(height: 10,),
-                        Text(
-                          "Rs ${usrdata['Balance']}",
-                          style: TextStyle(fontSize: 40),
-                        ),
-                      ],
-                    ))
-                ),
-              ),
-            );
+          return Container(
+            alignment: Alignment.topCenter,
+            padding: EdgeInsets.all(20),
+            child: Card(
+              color: Colors.blue,
+              child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  child: Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Wallet",
+                        style: TextStyle(color: Colors.black54, fontSize: 20),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Rs ${usrdata['Balance']}",
+                        style: TextStyle(fontSize: 40),
+                      ),
+                    ],
+                  ))),
+            ),
+          );
         });
   }
 }

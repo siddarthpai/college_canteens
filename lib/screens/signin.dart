@@ -21,9 +21,9 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      //backgroundColor: Colors.brown[100],
       appBar: AppBar(
-        backgroundColor: Colors.brown[400],
+        //backgroundColor: Colors.brown[400],
         elevation: 0.0,
         title: Text('Sign In to Bolt Snack'),
         actions: [
@@ -45,7 +45,10 @@ class _SignInState extends State<SignIn> {
                 child: Column(children: <Widget>[
                   SizedBox(height: 20.0),
                   TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: 'Email'),
+                    decoration: textInputDecoration.copyWith(
+                        hintText: 'Email',
+                        fillColor: Colors.blueGrey[50],
+                        filled: true),
                     validator: (val) {
                       if (val!.isEmpty) {
                         return "Enter an email";
@@ -61,8 +64,10 @@ class _SignInState extends State<SignIn> {
                   ),
                   SizedBox(height: 20.0),
                   TextFormField(
-                    decoration:
-                        textInputDecoration.copyWith(hintText: 'Password'),
+                    decoration: textInputDecoration.copyWith(
+                        hintText: 'Password',
+                        fillColor: Colors.blueGrey[50],
+                        filled: true),
                     validator: (val) {
                       if (val!.length < 6) {
                         return "Password should be atleast 6 chars long";

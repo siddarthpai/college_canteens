@@ -53,7 +53,7 @@ class _MenuState extends State<Menu> {
                         children: [
                           Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               Text("${key.toString()} x" +

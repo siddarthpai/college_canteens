@@ -2,7 +2,7 @@ import 'package:college_canteens/screens/admin_homepage.dart';
 import 'package:college_canteens/screens/authenticate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/UserHomePage.dart';
+import 'screens/user_homepage.dart';
 import 'screens/signin.dart';
 
 Future<void> main() async {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.lightGreen,
       ),
       initialRoute: '/auth',
       routes: {
