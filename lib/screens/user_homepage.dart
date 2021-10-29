@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'UserHomePage/menu.dart';
 import 'UserHomePage/wallet.dart';
 
@@ -12,6 +12,7 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   int currIndex = 0;
   Map usrdata = {};
 
@@ -28,7 +29,8 @@ class _UserHomePageState extends State<UserHomePage> {
               "Sign Out",
               style: TextStyle(color: Colors.black),
             ),
-            onPressed: () {
+            onPressed: () async {
+              await _auth.signOut();
               Navigator.popAndPushNamed(context, '/auth');
             },
           )
