@@ -1,5 +1,6 @@
 import 'package:college_canteens/screens/register.dart';
 import 'package:college_canteens/shared/conts.dart';
+import 'package:college_canteens/shared/funcs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'signin.dart';
@@ -37,6 +38,9 @@ class _AuthenticateState extends State<Authenticate> {
       });
 
       if (authCredential.user != null) {
+        showTextSnackbar(context, "Ph: ${_auth.currentUser!.phoneNumber}");
+        showTextSnackbar(context, "uid: ${_auth.currentUser!.uid}");
+
         Navigator.pushReplacementNamed(context, '/user', arguments: {
           "usrdata": {
             'username': "sachith@gmail",
