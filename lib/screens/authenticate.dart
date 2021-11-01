@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_canteens/shared/conts.dart';
 import 'package:college_canteens/shared/funcs.dart';
+import 'package:country_code_picker/country_code.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,7 @@ class _AuthenticateState extends State<Authenticate> {
   final otpFormKey = GlobalKey<FormState>();
   String mob_no = "";
   String otp = "";
+  String countryCode = "+91";
   String? _verificationId;
 
   bool showLoading = false;
@@ -75,20 +78,37 @@ class _AuthenticateState extends State<Authenticate> {
           Spacer(
             flex: 2,
           ),
-          TextFormField(
-            //keyboardType: TextInputType.number,
-            decoration: textInputDecoration.copyWith(
-                fillColor: Colors.blueGrey[50], hintText: "Phone Number"),
-            validator: (val) {
-              if (val == null) {
-                return "Please enter a valid moble number.";
-              } else {
-                return null;
-              }
-            },
-            onSaved: (value) => setState(() {
-              mob_no = value!;
-            }),
+          Row(
+            children: [
+              Expanded(
+                child: CountryCodePicker(
+                    onChanged: (val) {
+                      countryCode = val.toString();
+                    },
+                    initialSelection: "IN",
+                    showFlagMain: false,
+                    textStyle: TextStyle(fontSize: 17, color: Colors.black),
+                    dialogSize: Size(300, 400)),
+              ),
+              Expanded(
+                flex: 4,
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: textInputDecoration.copyWith(
+                      fillColor: Colors.blueGrey[50], hintText: "Phone Number"),
+                  validator: (val) {
+                    if (val == null) {
+                      return "Please enter a valid moble number.";
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) => setState(() {
+                    mob_no = value!;
+                  }),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 20,
@@ -105,9 +125,8 @@ class _AuthenticateState extends State<Authenticate> {
                 setState(() {
                   showLoading = true;
                 });
-                print(mob_no);
                 await _auth.verifyPhoneNumber(
-                    phoneNumber: mob_no,
+                    phoneNumber: countryCode + mob_no,
                     verificationCompleted: (phoneAuthCredential) async {
                       setState(() {
                         showLoading = false;
