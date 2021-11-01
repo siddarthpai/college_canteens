@@ -1,9 +1,8 @@
-import 'package:college_canteens/screens/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_canteens/shared/conts.dart';
 import 'package:college_canteens/shared/funcs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'signin.dart';
 
 enum ScreenState { MOBILE_NO_STATE, OTP_STATE }
 
@@ -33,23 +32,32 @@ class _AuthenticateState extends State<Authenticate> {
     try {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
+
+      if (authCredential.user != null) {
+        var user = await FirebaseFirestore.instance
+            .doc('Users/${_auth.currentUser!.uid}');
+        DocumentSnapshot user_data = await user.get();
+        //ISTG SMARAN IF U SHIP TO PROD WITH CLIENT SIDE ACCESS TO BALANCE FIELD
+        //I WILL SMASH UR PC AND DELETE UR GITHUB INTO DATALOSS OBLIVION and pain.
+        //tldr: Enable Cloud functions to create doc in users collection and
+        //DO NOT give client access to users collection via security rules
+        if (!user_data.exists) {
+          await user.set({
+            "isAdmin": false,
+            "Balance": 0,
+          });
+          user_data = await user.get(); //re-getting doc since its updated now
+        }
+        Map usrdata = user_data.data() as Map<String, dynamic>;
+        usrdata['username'] = _auth.currentUser!.uid;
+
+        Navigator.pushReplacementNamed(context, '/user',
+            arguments: {"usrdata": usrdata});
+      }
+
       setState(() {
         showLoading = false;
       });
-
-      if (authCredential.user != null) {
-        showTextSnackbar(context, "Ph: ${_auth.currentUser!.phoneNumber}");
-        showTextSnackbar(context, "uid: ${_auth.currentUser!.uid}");
-
-        Navigator.pushReplacementNamed(context, '/user', arguments: {
-          "usrdata": {
-            'username': "sachith@gmail",
-            'password': "sachith",
-            'Balance': 1670,
-            'isAdmin': false
-          }
-        });
-      }
     } on FirebaseAuthException catch (e) {
       setState(() {
         showLoading = false;

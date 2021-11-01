@@ -6,6 +6,6 @@ Future<void> showTextSnackbar(
 ) async {
   await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: Text(text!),
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 3),
   ));
 }

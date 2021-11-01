@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_canteens/screens/admin_homepage.dart';
 import 'package:college_canteens/screens/authenticate.dart';
+import 'package:college_canteens/shared/funcs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'screens/user_homepage.dart';
-import 'screens/signin.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,21 +53,31 @@ class _InitializerWidgetState extends State<InitializerWidget> {
     _auth = FirebaseAuth.instance;
     _user = _auth!.currentUser;
     isLoading = false;
+    route();
+  }
+
+  Future<void> route() async {
     if (_user == null) {
       SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
         Navigator.pushReplacementNamed(context, '/auth');
       });
     } else {
-      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-        Navigator.pushReplacementNamed(context, '/user', arguments: {
-          "usrdata": {
-            'username': "sachith@gmail",
-            'password': "sachith",
-            'Balance': 1670,
-            'isAdmin': false
-          }
+      var user = await FirebaseFirestore.instance
+          .doc('Users/${_auth!.currentUser!.uid}');
+      DocumentSnapshot user_data = await user.get();
+      Map usrdata = user_data.data() as Map<String, dynamic>;
+      usrdata['username'] = _auth!.currentUser!.uid;
+      showTextSnackbar(context, usrdata.toString());
+      if (usrdata['isAdmin']) {
+        SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+          Navigator.pushReplacementNamed(context, '/user',
+              arguments: {"usrdata": usrdata});
         });
-      });
+      } else {
+        SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+          Navigator.pushReplacementNamed(context, '/admin');
+        });
+      }
     }
   }
 
