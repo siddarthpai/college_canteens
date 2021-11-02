@@ -6,7 +6,8 @@ import 'UserHomePage/menu.dart';
 import 'UserHomePage/wallet.dart';
 
 class UserHomePage extends StatefulWidget {
-  const UserHomePage({Key? key}) : super(key: key);
+  const UserHomePage({Key? key, required this.usrdata}) : super(key: key);
+  final Map usrdata;
 
   @override
   _UserHomePageState createState() => _UserHomePageState();
@@ -15,15 +16,12 @@ class UserHomePage extends StatefulWidget {
 class _UserHomePageState extends State<UserHomePage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   int currIndex = 0;
-  Map usrdata = {};
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map;
-    usrdata = arguments['usrdata'];
     return Scaffold(
       appBar: AppBar(
-        title: Text("College Canteens"),
+        title: Text("Bolt Snack"),
         actions: [
           TextButton(
             child: Text(
@@ -42,13 +40,13 @@ class _UserHomePageState extends State<UserHomePage> {
           Offstage(
             offstage: currIndex != 0,
             child: Menu(
-              usrdata: usrdata,
+              usrdata: widget.usrdata,
             ),
           ),
           Offstage(
             offstage: currIndex != 1,
             child: Wallet(
-              username: usrdata['username'],
+              username: widget.usrdata['username'],
             ),
           )
         ],
