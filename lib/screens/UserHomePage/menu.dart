@@ -29,7 +29,7 @@ class _MenuState extends State<Menu> {
             return Text("Something went wrong");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
+            return CircularProgressIndicator();
           }
 
           final data = snapshot.requireData.get('Menu');
