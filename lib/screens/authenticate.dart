@@ -49,10 +49,10 @@ class _AuthenticateState extends State<Authenticate> {
             "isAdmin": false,
             "Balance": 0,
           });
-          user_data = await user.get(); //re-getting doc since its updated now
+          //user_data = await user.get(); //re-getting doc since its updated now
         }
-        Map usrdata = user_data.data() as Map<String, dynamic>;
-        usrdata['username'] = _auth.currentUser!.uid;
+        //Map usrdata = user_data.data() as Map<String, dynamic>;
+        //usrdata['username'] = _auth.currentUser!.uid;
 
         Navigator.pushReplacementNamed(
           context,

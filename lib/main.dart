@@ -27,8 +27,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/init',
       routes: {
         '/auth': (context) => Authenticate(),
-        '/user': (context) => UserHomePage(),
-        '/admin': (context) => AdminHomePage(),
         '/init': (context) => InitializerWidget()
       },
     );
@@ -46,14 +44,15 @@ class _InitializerWidgetState extends State<InitializerWidget> {
   FirebaseAuth? _auth;
   User? _user;
   bool isLoading = true;
+  bool isAdmin = false;
+  Map usrdata = {};
 
   @override
   void initState() {
     super.initState();
     _auth = FirebaseAuth.instance;
     _user = _auth!.currentUser;
-    isLoading = false;
-    route();
+    route().then((value) => isLoading = false);
   }
 
   Future<void> route() async {
@@ -65,30 +64,30 @@ class _InitializerWidgetState extends State<InitializerWidget> {
       var user = await FirebaseFirestore.instance
           .doc('Users/${_auth!.currentUser!.uid}');
       DocumentSnapshot user_data = await user.get();
-      Map usrdata = user_data.data() as Map<String, dynamic>;
-      usrdata['username'] = _auth!.currentUser!.uid;
-      if (!usrdata['isAdmin']) {
-        SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-          Navigator.pushReplacementNamed(context, '/user',
-              arguments: {"usrdata": usrdata});
-        });
-      } else {
-        SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-          Navigator.pushReplacementNamed(context, '/admin');
-        });
-      }
+      setState(() {
+        usrdata = user_data.data() as Map<String, dynamic>;
+        usrdata['username'] = _auth!.currentUser!.uid;
+        if (!usrdata['isAdmin']) {
+        } else {
+          isAdmin = true;
+        }
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Bolt Snacck"),
-      ),
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return isLoading
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text("Bolt Snack"),
+            ),
+            body: Center(child: CircularProgressIndicator()),
+          )
+        : isAdmin
+            ? AdminHomePage()
+            : UserHomePage(
+                usrdata: usrdata,
+              );
   }
 }
