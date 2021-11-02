@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:college_canteens/shared/funcs.dart';
 import 'package:flutter/material.dart';
 
 class Wallet extends StatefulWidget {
@@ -10,13 +11,12 @@ class Wallet extends StatefulWidget {
 }
 
 class _WalletState extends State<Wallet> {
-  final Stream<DocumentSnapshot<Map<String, dynamic>>> menuItems =
-      FirebaseFirestore.instance.doc('Users/User').snapshots();
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        stream: menuItems,
+        stream: FirebaseFirestore.instance
+            .doc('Users/${widget.username}')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("Something went wrong");
@@ -24,8 +24,8 @@ class _WalletState extends State<Wallet> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
           }
-          final data = snapshot.requireData.get(widget.username);
-          Map<String, dynamic> usrdata = Map<String, dynamic>.from(data);
+
+          final usrdata = snapshot.data!.data();
 
           return Container(
             alignment: Alignment.topCenter,
@@ -47,7 +47,7 @@ class _WalletState extends State<Wallet> {
                         height: 10,
                       ),
                       Text(
-                        "Rs ${usrdata['Balance']}",
+                        "Rs ${usrdata!['Balance']}",
                         style: TextStyle(fontSize: 40),
                       ),
                     ],

@@ -161,11 +161,11 @@ class _MenuState extends State<Menu> {
                                 onPressed: () async {
                                   String username = widget.usrdata['username'];
                                   var event = await FirebaseFirestore.instance
-                                      .doc('Users/User')
+                                      .doc('Users/$username')
                                       .get();
-                                  Map<String, dynamic> users =
+                                  Map<String, dynamic> user =
                                       event.data() as Map<String, dynamic>;
-                                  int balance = users[username]['Balance'];
+                                  int balance = user['Balance'];
 
                                   if (balance < subtotal) {
                                     showDialog(
@@ -187,16 +187,9 @@ class _MenuState extends State<Menu> {
                                         });
                                   } else {
                                     int newBalance = balance - subtotal;
-                                    var _event = await FirebaseFirestore
-                                        .instance
-                                        .doc('Users/User');
-                                    await _event.update({
-                                      widget.usrdata['username']: {
-                                        'Balance': newBalance,
-                                        "isAdmin": false,
-                                        "password": widget.usrdata['password']
-                                      }
-                                    });
+                                    var user = await FirebaseFirestore.instance
+                                        .doc('Users/$username');
+                                    await user.update({"Balance": newBalance});
                                     widget.usrdata['Balance'] = newBalance;
 
                                     var collection = await FirebaseFirestore
