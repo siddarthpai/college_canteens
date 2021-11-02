@@ -54,8 +54,10 @@ class _AuthenticateState extends State<Authenticate> {
         Map usrdata = user_data.data() as Map<String, dynamic>;
         usrdata['username'] = _auth.currentUser!.uid;
 
-        Navigator.pushReplacementNamed(context, '/user',
-            arguments: {"usrdata": usrdata});
+        Navigator.pushReplacementNamed(
+          context,
+          '/init',
+        );
       }
 
       setState(() {

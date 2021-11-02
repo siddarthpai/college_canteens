@@ -67,8 +67,7 @@ class _InitializerWidgetState extends State<InitializerWidget> {
       DocumentSnapshot user_data = await user.get();
       Map usrdata = user_data.data() as Map<String, dynamic>;
       usrdata['username'] = _auth!.currentUser!.uid;
-      showTextSnackbar(context, usrdata.toString());
-      if (usrdata['isAdmin']) {
+      if (!usrdata['isAdmin']) {
         SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
           Navigator.pushReplacementNamed(context, '/user',
               arguments: {"usrdata": usrdata});
@@ -84,6 +83,9 @@ class _InitializerWidgetState extends State<InitializerWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Bolt Snacck"),
+      ),
       body: Center(
         child: CircularProgressIndicator(),
       ),

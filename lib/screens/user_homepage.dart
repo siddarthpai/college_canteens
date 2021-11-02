@@ -23,7 +23,7 @@ class _UserHomePageState extends State<UserHomePage> {
     usrdata = arguments['usrdata'];
     return Scaffold(
       appBar: AppBar(
-        title: Text("College Canteens"),
+        title: Text("Bolt Snack"),
         actions: [
           TextButton(
             child: Text(
