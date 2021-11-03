@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'dart:core';
 import 'package:uuid/uuid.dart';
 
@@ -29,7 +30,7 @@ class _MenuState extends State<Menu> {
             return Text("Something went wrong");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           final data = snapshot.requireData.get('Menu');
@@ -198,10 +199,15 @@ class _MenuState extends State<Menu> {
                                             'Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
                                     var uuid = Uuid();
                                     var ord_id = uuid.v4().toString();
+                                    DateTime now = DateTime.now();
+                                    String currentTime =
+                                        DateFormat("yyyy-MM-dd - kk:mm:ss")
+                                            .format(now);
                                     collection.doc(ord_id).set({
                                       "user": username,
                                       "price": subtotal,
-                                      "items": cart
+                                      "items": cart,
+                                      "timestamp": currentTime
                                     });
 
                                     await showDialog(

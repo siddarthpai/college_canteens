@@ -38,7 +38,7 @@ class _AuthenticateState extends State<Authenticate> {
 
       if (authCredential.user != null) {
         var user = await FirebaseFirestore.instance
-            .doc('Users/${_auth.currentUser!.uid}');
+            .doc('Users/${_auth.currentUser!.phoneNumber}');
         DocumentSnapshot user_data = await user.get();
         //ISTG SMARAN IF U SHIP TO PROD WITH CLIENT SIDE ACCESS TO BALANCE FIELD
         //I WILL SMASH UR PC AND DELETE UR GITHUB INTO DATALOSS OBLIVION and pain.
