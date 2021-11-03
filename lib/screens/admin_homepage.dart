@@ -14,6 +14,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   final Stream<QuerySnapshot<Map<String, dynamic>>> ordersStream =
       FirebaseFirestore.instance
           .collection('Colleges/PES - RR/Canteens/13th Floor Canteen/Orders')
+          .orderBy("timestamp", descending: true)
           .snapshots();
 
   @override

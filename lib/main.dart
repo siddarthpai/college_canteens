@@ -62,11 +62,11 @@ class _InitializerWidgetState extends State<InitializerWidget> {
       });
     } else {
       var user = await FirebaseFirestore.instance
-          .doc('Users/${_auth!.currentUser!.uid}');
+          .doc('Users/${_auth!.currentUser!.phoneNumber}');
       DocumentSnapshot user_data = await user.get();
       setState(() {
         usrdata = user_data.data() as Map<String, dynamic>;
-        usrdata['username'] = _auth!.currentUser!.uid;
+        usrdata['username'] = _auth!.currentUser!.phoneNumber;
         if (!usrdata['isAdmin']) {
         } else {
           isAdmin = true;

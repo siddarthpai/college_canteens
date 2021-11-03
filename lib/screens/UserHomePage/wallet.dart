@@ -22,7 +22,7 @@ class _WalletState extends State<Wallet> {
             return Text("Something went wrong");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
+            return CircularProgressIndicator();
           }
 
           final usrdata = snapshot.data!.data();
