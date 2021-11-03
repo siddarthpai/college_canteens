@@ -42,8 +42,7 @@ class _AuthenticateState extends State<Authenticate> {
         DocumentSnapshot user_data = await user.get();
         //ISTG SMARAN IF U SHIP TO PROD WITH CLIENT SIDE ACCESS TO BALANCE FIELD
         //I WILL SMASH UR PC AND DELETE UR GITHUB INTO DATALOSS OBLIVION and pain.
-        //tldr: Enable Cloud functions to create doc in users collection and
-        //DO NOT give client access to users collection via security rules
+        //TODO: Enable Cloud functions to create doc in users collection and DO NOT give client access to users collection via security rules
         if (!user_data.exists) {
           await user.set({
             "isAdmin": false,
@@ -164,6 +163,7 @@ class _AuthenticateState extends State<Authenticate> {
     );
   }
 
+  //TODO: Impement a good otp entry field
   Widget get_otp_state(BuildContext context) {
     return Form(
       key: otpFormKey,
