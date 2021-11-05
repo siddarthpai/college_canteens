@@ -188,13 +188,12 @@ class _MenuState extends State<Menu> {
                                         });
                                   } else {
                                     int newBalance = balance - subtotal;
-                                    var user = await FirebaseFirestore.instance
+                                    var user = FirebaseFirestore.instance
                                         .doc('Users/$username');
                                     await user.update({"Balance": newBalance});
                                     widget.usrdata['Balance'] = newBalance;
 
-                                    var collection = await FirebaseFirestore
-                                        .instance
+                                    var collection = FirebaseFirestore.instance
                                         .collection(
                                             'Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
                                     var uuid = Uuid();

@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_canteens/shared/conts.dart';
-import 'package:college_canteens/shared/funcs.dart';
-import 'package:country_code_picker/country_code.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,8 @@ import 'package:flutter/material.dart';
 enum ScreenState { MOBILE_NO_STATE, OTP_STATE }
 
 class Authenticate extends StatefulWidget {
+  const Authenticate({Key? key}) : super(key: key);
+
   @override
   _AuthenticateState createState() => _AuthenticateState();
 }
@@ -37,7 +37,7 @@ class _AuthenticateState extends State<Authenticate> {
           await _auth.signInWithCredential(phoneAuthCredential);
 
       if (authCredential.user != null) {
-        var user = await FirebaseFirestore.instance
+        var user = FirebaseFirestore.instance
             .doc('Users/${_auth.currentUser!.phoneNumber}');
         DocumentSnapshot user_data = await user.get();
         //ISTG SMARAN IF U SHIP TO PROD WITH CLIENT SIDE ACCESS TO BALANCE FIELD

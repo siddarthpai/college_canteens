@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_canteens/screens/admin_homepage.dart';
 import 'package:college_canteens/screens/authenticate.dart';
-import 'package:college_canteens/shared/funcs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +60,7 @@ class _InitializerWidgetState extends State<InitializerWidget> {
         Navigator.pushReplacementNamed(context, '/auth');
       });
     } else {
-      var user = await FirebaseFirestore.instance
+      var user = FirebaseFirestore.instance
           .doc('Users/${_auth!.currentUser!.phoneNumber}');
       DocumentSnapshot user_data = await user.get();
       setState(() {

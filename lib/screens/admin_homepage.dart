@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:college_canteens/screens/AdminHomePage/pending_orders.dart';
 import 'package:college_canteens/screens/AdminHomePage/served_orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:paginate_firestore/paginate_firestore.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);

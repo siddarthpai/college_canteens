@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:college_canteens/shared/funcs.dart';
 import 'package:flutter/material.dart';
 
 class Wallet extends StatefulWidget {
