@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:college_canteens/shared/funcs.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
@@ -17,6 +16,7 @@ class _ServedOrdersState extends State<ServedOrders>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return PaginateFirestore(
       query: FirebaseFirestore.instance
           .collection('Colleges/PES - RR/Canteens/13th Floor Canteen/Orders')

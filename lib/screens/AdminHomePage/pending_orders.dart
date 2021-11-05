@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:college_canteens/shared/funcs.dart';
 import 'package:flutter/material.dart';
-import 'package:paginate_firestore/paginate_firestore.dart';
 
 class PendingOrders extends StatefulWidget {
   const PendingOrders({Key? key}) : super(key: key);
@@ -10,7 +8,11 @@ class PendingOrders extends StatefulWidget {
   _PendingOrdersState createState() => _PendingOrdersState();
 }
 
-class _PendingOrdersState extends State<PendingOrders> {
+class _PendingOrdersState extends State<PendingOrders>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true; //Keeps Widget Alive
+
   final Stream<QuerySnapshot<Map<String, dynamic>>> ordersStream =
       FirebaseFirestore.instance
           .collection('Colleges/PES - RR/Canteens/13th Floor Canteen/Orders')
@@ -20,6 +22,7 @@ class _PendingOrdersState extends State<PendingOrders> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: ordersStream,
         builder: (context, snapshot) {
@@ -34,7 +37,7 @@ class _PendingOrdersState extends State<PendingOrders> {
 
           final orders = snapshot.requireData.docs;
 
-          return orders.length == 0
+          return orders.isEmpty
               ? Center(child: Text("No Pending Orders"))
               : ListView.builder(
                   itemCount: orders.length,
