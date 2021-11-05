@@ -80,9 +80,9 @@ class _InitializerWidgetState extends State<InitializerWidget> {
     return isLoading
         ? Scaffold(
             appBar: AppBar(
-              title: Text("Bolt Snack"),
+              title: const Text("Bolt Snack"),
             ),
-            body: Center(child: CircularProgressIndicator()),
+            body: const Center(child: CircularProgressIndicator()),
           )
         : isAdmin
             ? AdminHomePage()
