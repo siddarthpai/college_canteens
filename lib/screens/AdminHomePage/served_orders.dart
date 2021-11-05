@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:college_canteens/shared/funcs.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
@@ -9,7 +10,11 @@ class ServedOrders extends StatefulWidget {
   _ServedOrdersState createState() => _ServedOrdersState();
 }
 
-class _ServedOrdersState extends State<ServedOrders> {
+class _ServedOrdersState extends State<ServedOrders>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true; //Keeps Widget Alive
+
   @override
   Widget build(BuildContext context) {
     return PaginateFirestore(
@@ -22,6 +27,7 @@ class _ServedOrdersState extends State<ServedOrders> {
       itemBuilder: (index, context, snapshot) {
         DocumentSnapshot order = snapshot;
         Map items = order['items'];
+
         return Container(
           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: Card(
@@ -33,7 +39,7 @@ class _ServedOrdersState extends State<ServedOrders> {
                   Text("${order['user']} - Rs ${order['price']}\n"),
                   Text("Orders:"),
                   for (var key in items.keys)
-                    Text("${key} - ${items[key]['quantity'].toString()}")
+                    Text("$key - ${items[key]['quantity'].toString()}"),
                 ],
               ),
             ),
