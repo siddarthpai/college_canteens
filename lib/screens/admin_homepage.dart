@@ -21,7 +21,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Canteen Admin"),
+          title: const Text("Canteen Admin"),
           actions: [
             TextButton(
               child: const Text(

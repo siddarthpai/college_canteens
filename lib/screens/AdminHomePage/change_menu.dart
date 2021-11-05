@@ -29,35 +29,97 @@ class _ChangeMenuState extends State<ChangeMenu> {
           }
           var data = snapshot.requireData.get("Menu");
           Map<String, dynamic> menu = Map<String, dynamic>.from(data);
-
+          Map<String, dynamic> available_menu = {};
+          Map<String, dynamic> unavailable_menu = {};
+          for (var key in menu.keys) {
+            if (menu[key]['isAvailable']) {
+              available_menu[key] = menu[key];
+            } else {
+              unavailable_menu[key] = menu[key];
+            }
+          }
+          menu = {
+            ...available_menu,
+            ...unavailable_menu,
+          };
           return ListView.builder(
-            itemCount: menu.length,
+            itemCount: menu.length + 1,
             itemBuilder: (context, index) {
-              String key = menu.keys.toList()[index];
-              return Container(
-                height: 60,
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(key),
-                        Row(
-                          children: [
-                            Text("Rs${menu[key]['Price']}"),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.lightGreen,
+              if (index == menu.length) {
+                return Container(
+                  height: 60,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton.icon(
+                        icon: Icon(Icons.add),
+                        label: Text("Add an item"),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                String key = menu.keys.toList()[index];
+                return Container(
+                  height: 60,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  foregroundDecoration: menu[key]["isAvailable"]
+                      ? null
+                      : const BoxDecoration(
+                          color: Colors.grey,
+                          backgroundBlendMode: BlendMode.saturation,
+                        ),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(key),
+                          Row(
+                            children: [
+                              Text("Rs ${menu[key]['Price']}"),
+                              const SizedBox(
+                                width: 5,
                               ),
-                              onPressed: () {},
-                            ),
-                            IconButton(
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.lightGreen,
+                                ),
+                                onPressed: () {},
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  menu[key]["isAvailable"]
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.lightBlue,
+                                ),
+                                onPressed: () {
+                                  menu[key]['isAvailable'] =
+                                      !menu[key]['isAvailable'];
+                                  canteen.update({"Menu": menu});
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        });
+  }
+}
+
+/* 
+IconButton(
                               icon: Icon(Icons.close, color: Colors.red),
                               onPressed: () {
                                 showDialog(
@@ -88,15 +150,4 @@ class _ChangeMenuState extends State<ChangeMenu> {
                                     });
                               },
                             )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        });
-  }
-}
+*/

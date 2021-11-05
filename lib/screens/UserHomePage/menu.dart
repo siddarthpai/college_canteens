@@ -35,6 +35,13 @@ class _MenuState extends State<Menu> {
 
           final data = snapshot.requireData.get('Menu');
           Map<String, dynamic> menu = Map<String, dynamic>.from(data);
+          Map<String, dynamic> submenu = {};
+          for (var item in menu.keys) {
+            if (menu[item]['isAvailable']) {
+              submenu[item] = menu[item];
+            }
+          }
+          menu = submenu;
 
           return Column(
             children: [
@@ -149,7 +156,7 @@ class _MenuState extends State<Menu> {
                         children: [
                           Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               Text("Subtotal: Rs ${subtotal}"),
