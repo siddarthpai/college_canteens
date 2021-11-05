@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:college_canteens/screens/AdminHomePage/pending_orders.dart';
+import 'package:college_canteens/screens/AdminHomePage/served_orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
@@ -20,51 +22,34 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Canteen Admin"),
-          actions: [
-            TextButton(
-              child: const Text(
-                "Sign Out",
-                style: TextStyle(color: Colors.black),
-              ),
-              onPressed: () async {
-                await _auth.signOut();
-                Navigator.popAndPushNamed(context, '/auth');
-              },
-            )
-          ],
-        ),
-        body: PaginateFirestore(
-          query: FirebaseFirestore.instance
-              .collection(
-                  'Colleges/PES - RR/Canteens/13th Floor Canteen/Orders')
-              .orderBy("timestamp", descending: true),
-          itemBuilderType: PaginateBuilderType.listView,
-          isLive: true,
-          itemBuilder: (index, context, snapshot) {
-            DocumentSnapshot order = snapshot;
-            Map items = order['items'];
-            return Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Card(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${order['user']} - Rs ${order['price']}\n"),
-                      Text("Orders:"),
-                      for (var key in items.keys)
-                        Text("${key} - ${items[key]['quantity'].toString()}")
-                    ],
-                  ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text("Canteen Admin"),
+            actions: [
+              TextButton(
+                child: const Text(
+                  "Sign Out",
+                  style: TextStyle(color: Colors.black),
                 ),
-              ),
-            );
-          },
-        ));
+                onPressed: () async {
+                  await _auth.signOut();
+                  Navigator.popAndPushNamed(context, '/auth');
+                },
+              )
+            ],
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: "Pending"),
+                Tab(text: "Served"),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [const PendingOrders(), const ServedOrders()],
+          )),
+    );
   }
 }
 

@@ -207,7 +207,8 @@ class _MenuState extends State<Menu> {
                                       "user": username,
                                       "price": subtotal,
                                       "items": cart,
-                                      "timestamp": currentTime
+                                      "timestamp": currentTime,
+                                      "isServed": false
                                     });
 
                                     await showDialog(
