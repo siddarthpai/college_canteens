@@ -1,3 +1,4 @@
+import 'package:college_canteens/screens/AdminHomePage/change_menu.dart';
 import 'package:college_canteens/screens/AdminHomePage/pending_orders.dart';
 import 'package:college_canteens/screens/AdminHomePage/served_orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomePageState extends State<AdminHomePage> {
   final _auth = FirebaseAuth.instance;
+  int navBarIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +34,27 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
             )
           ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: "Pending"),
-              Tab(text: "Served"),
-            ],
-          ),
+          bottom: navBarIndex != 0
+              ? null
+              : const TabBar(
+                  tabs: [
+                    Tab(text: "Pending"),
+                    Tab(text: "Served"),
+                  ],
+                ),
         ),
-        body: const TabBarView(
-          children: [PendingOrders(), ServedOrders()],
+        body: Stack(
+          children: [
+            Offstage(
+                offstage: navBarIndex != 0,
+                child: const TabBarView(
+                  children: [PendingOrders(), ServedOrders()],
+                )),
+            Offstage(
+              offstage: navBarIndex != 1,
+              child: ChangeMenu(),
+            )
+          ],
         ),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
@@ -56,6 +70,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
             currentIndex: 0,
             backgroundColor: Colors.lightGreen,
             selectedItemColor: Colors.black,
+            onTap: (index) => setState(() {
+              navBarIndex = index;
+            }),
             items: const [
               BottomNavigationBarItem(
                   icon: Icon(Icons.food_bank), label: "Orders"),
