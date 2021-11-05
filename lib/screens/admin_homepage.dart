@@ -67,7 +67,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           ),
           child: BottomNavigationBar(
             elevation: 50.0,
-            currentIndex: 0,
+            currentIndex: navBarIndex,
             backgroundColor: Colors.lightGreen,
             selectedItemColor: Colors.black,
             onTap: (index) => setState(() {
