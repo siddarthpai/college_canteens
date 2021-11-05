@@ -174,7 +174,7 @@ class _MenuState extends State<Menu> {
                                         builder: (context) {
                                           return AlertDialog(
                                             title: Text("Alert"),
-                                            content: Text(
+                                            content: const Text(
                                                 "Insuffient balance. Please Recharge Wallet"),
                                             actions: [
                                               TextButton(
@@ -190,6 +190,7 @@ class _MenuState extends State<Menu> {
                                     int newBalance = balance - subtotal;
                                     var user = FirebaseFirestore.instance
                                         .doc('Users/$username');
+                                    //TODO: Write Cloud function to cut users balance on creating order. Client should NOT have write access to balance.
                                     await user.update({"Balance": newBalance});
                                     widget.usrdata['Balance'] = newBalance;
 

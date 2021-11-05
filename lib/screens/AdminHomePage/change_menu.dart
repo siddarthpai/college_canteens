@@ -10,15 +10,14 @@ class ChangeMenu extends StatefulWidget {
 }
 
 class _ChangeMenuState extends State<ChangeMenu> {
-  final Stream<DocumentSnapshot<Map<String, dynamic>>> canteenStream =
-      FirebaseFirestore.instance
-          .doc('Colleges/PES - RR/Canteens/13th Floor Canteen')
-          .snapshots();
+  final DocumentReference<Map<String, dynamic>> canteen = FirebaseFirestore
+      .instance
+      .doc('Colleges/PES - RR/Canteens/13th Floor Canteen');
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        stream: canteenStream,
+        stream: canteen.snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text("Something went wrong");
@@ -60,7 +59,34 @@ class _ChangeMenuState extends State<ChangeMenu> {
                             ),
                             IconButton(
                               icon: Icon(Icons.close, color: Colors.red),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Confirm Delete"),
+                                        content: Text(
+                                            "Are you sure you want to delete item: $key"),
+                                        actions: [
+                                          TextButton(
+                                            child: Text("Yes"),
+                                            onPressed: () async {
+                                              menu.remove(key);
+                                              await canteen
+                                                  .update({"Menu": menu});
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("No"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              },
                             )
                           ],
                         )
