@@ -207,14 +207,11 @@ class _MenuState extends State<Menu> {
                                     var uuid = Uuid();
                                     var ord_id = uuid.v4().toString();
                                     DateTime now = DateTime.now();
-                                    String currentTime =
-                                        DateFormat("yyyy-MM-dd - kk:mm:ss")
-                                            .format(now);
                                     collection.doc(ord_id).set({
                                       "user": username,
                                       "price": subtotal,
                                       "items": cart,
-                                      "timestamp": currentTime,
+                                      "timestamp": now,
                                       "isServed": false
                                     });
 
