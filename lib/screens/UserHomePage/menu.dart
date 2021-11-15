@@ -175,17 +175,35 @@ class _MenuState extends State<Menu> {
                                       event.data() as Map<String, dynamic>;
                                   int balance = user['Balance'];
 
-                                  if (balance < subtotal) {
+                                  if (subtotal == 0) {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
-                                            title: Text("Alert"),
+                                            title: const Text("Cart Empty"),
+                                            content: const Text(
+                                                "Cart is Empty. Please Add items to cart"),
+                                            actions: [
+                                              TextButton(
+                                                child: const Text("OK"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  } else if (balance < subtotal) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Alert"),
                                             content: const Text(
                                                 "Insuffient balance. Please Recharge Wallet"),
                                             actions: [
                                               TextButton(
-                                                child: Text("OK"),
+                                                child: const Text("OK"),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
@@ -194,13 +212,6 @@ class _MenuState extends State<Menu> {
                                           );
                                         });
                                   } else {
-                                    int newBalance = balance - subtotal;
-                                    var user = FirebaseFirestore.instance
-                                        .doc('Users/$username');
-                                    //TODO: Write Cloud function to cut users balance on creating order. Client should NOT have write access to balance.
-                                    await user.update({"Balance": newBalance});
-                                    widget.usrdata['Balance'] = newBalance;
-
                                     var collection = FirebaseFirestore.instance
                                         .collection(
                                             'Colleges/PES - RR/Canteens/13th Floor Canteen/Orders');
