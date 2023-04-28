@@ -2,6 +2,8 @@
 
 ### Thank you for considering contributing to our project! We appreciate your time and effort, and we strive to make this repository a welcoming and inclusive space for everyone.
 
+**Please Contact me on how to setup Firebase to wrok on this project. Also, If you need a usb-c to normal usb adapter if your laptop doesn't have a USB slot, please contact me, I'll give you one**
+
 ## Code of Conduct
 
 By participating in contributing to this repository, you agree to upholding the Code of Conduct while making contributions.
